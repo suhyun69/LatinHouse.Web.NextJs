@@ -16,12 +16,13 @@ import { Label } from "@/components/ui/label"
 import { supabase } from "@/lib/supabase"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { Switch } from "@/components/ui/switch"
 
 type Profile = {
   profile_id: string
   nickname: string
   gender: string
-  isInstructor: boolean
+  is_instructor: boolean
 }
 
 export function CardsEditProfile({ profile }: { profile: Profile }) {
@@ -34,6 +35,7 @@ export function CardsEditProfile({ profile }: { profile: Profile }) {
   const [profileId] = React.useState(profile.profile_id)
   const [nickname, setNickname] = React.useState(profile.nickname)
   const [sex, setSex] = React.useState(profile.gender)
+  const [isInstructor, setIsInstructor] = React.useState(profile.is_instructor)
 
   const handleSubmit = async () => {
     try {
@@ -50,7 +52,8 @@ export function CardsEditProfile({ profile }: { profile: Profile }) {
         .from('profiles')
         .update({
           nickname: nickname,
-          gender: sex
+          gender: sex,
+          is_instructor: isInstructor
         })
         .eq('profile_id', profileId)
         .select()
@@ -130,9 +133,36 @@ export function CardsEditProfile({ profile }: { profile: Profile }) {
               </div>
             </div>
           </div>
-          
+
         </CardContent>
       </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Instructor</CardTitle>
+          <CardDescription>
+            수업을 생성하고 관리할 수 있습니다.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-2">
+            <Label htmlFor="is-instructor">Is Instructor?</Label>
+            <div className="flex items-center gap-2">
+              <Switch
+                id="is-instructor"
+                checked={isInstructor}
+                onCheckedChange={setIsInstructor}
+                disabled={profile.is_instructor}
+              />
+              <span className="text-sm text-muted-foreground">
+                {isInstructor ? 'Yes' : 'No'}
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      
       
       <Button 
         className="w-full" 
