@@ -4,6 +4,7 @@ type Profile = {
   id: string
   nickname: string
   avatar_url: string
+  is_instructor: boolean
 } | null
 
 type ProfileStore = {

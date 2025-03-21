@@ -18,14 +18,14 @@ import * as React from "react"
 export function Header() {
   const { profile, setProfile } = useProfile()
   const router = useRouter()
-  const [profiles, setProfiles] = React.useState<Array<{ profile_id: string; nickname: string; gender: string }>>([])
+  const [profiles, setProfiles] = React.useState<Array<{ profile_id: string; nickname: string; gender: string; is_instructor: boolean }>>([])
 
   // 프로필 목록 조회
   React.useEffect(() => {
     const fetchProfiles = async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('profile_id, nickname, gender')
+        .select('profile_id, nickname, gender, is_instructor')
         .order('created_at', { ascending: false })
       
       if (data) setProfiles(data)
@@ -69,6 +69,10 @@ export function Header() {
                   <Plus className="mr-2 h-4 w-4" />
                   <span>수업 생성</span>
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/lessonMng')}>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>수업 관리</span>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setProfile(null)}>
                   <LogOut className="mr-2 h-4 w-4" />
@@ -96,7 +100,8 @@ export function Header() {
                     onClick={() => setProfile({ 
                       id: p.profile_id, 
                       nickname: p.nickname, 
-                      avatar_url: '' 
+                      avatar_url: '',
+                      is_instructor: p.is_instructor
                     })}
                   >
                     <User className="mr-2 h-4 w-4" />
