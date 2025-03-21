@@ -3,24 +3,18 @@
 import { useProfile } from "@/hooks/useProfile"
 import RegisterInstructor from "./RegisterInstructor"
 
-type ProfileDetail = {
+type Profile = {
   profile_id: string
-  is_instructor: boolean
+  isInstructor: boolean
 }
 
-export function ClientProfileActions({ 
-  profileDetail,
-  profileId 
-}: { 
-  profileDetail: ProfileDetail
-  profileId: string 
-}) {
+export function ClientProfileActions({ profile }: { profile: Profile }) {
   const { profile: currentProfile } = useProfile()
 
-  if (!profileDetail.is_instructor && currentProfile?.id === profileId) {
+  if (!profile.isInstructor && currentProfile?.id === profile.profile_id) {
     return (
       <div className="flex justify-center">
-        <RegisterInstructor profileId={profileDetail.profile_id} />
+        <RegisterInstructor profileId={profile.profile_id} />
       </div>
     )
   }

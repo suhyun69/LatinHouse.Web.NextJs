@@ -12,13 +12,13 @@ import { ClientProfileActions } from "./ClientProfileActions"
 export default async function ProfilePage({ params }: { params: { profile_id: string } }) {
   const supabase = createServerComponentClient({ cookies })
   
-  const { data: profileDetail } = await supabase
+  const { data: profile } = await supabase
     .from('profiles')
     .select('*')
     .eq('profile_id', params.profile_id)
     .single()
 
-  if (!profileDetail) {
+  if (!profile) {
     return <div className="flex justify-center items-center min-h-screen">Profile not found</div>
   }
 
@@ -29,15 +29,15 @@ export default async function ProfilePage({ params }: { params: { profile_id: st
         <Card>
           <CardHeader className="flex flex-col items-center text-center">
             <Avatar className="h-32 w-32 mb-4">
-              <AvatarImage src="" alt={profileDetail.nickname} />
+              <AvatarImage src="" alt={profile.nickname} />
               <AvatarFallback>
                 <User className="h-16 w-16" />
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-3xl mb-2">{profileDetail.nickname}</CardTitle>
+              <CardTitle className="text-3xl mb-2">{profile.nickname}</CardTitle>
               <div className="text-sm text-muted-foreground">
-                {profileDetail.profile_id}
+                {profile.profile_id}
               </div>
             </div>
           </CardHeader>
@@ -46,20 +46,20 @@ export default async function ProfilePage({ params }: { params: { profile_id: st
               <div>
                 <div className="font-medium">Gender</div>
                 <div className="text-muted-foreground">
-                  {formatGender(profileDetail.gender)}
+                  {formatGender(profile.gender)}
                 </div>
               </div>
               <div>
                 <div className="font-medium">Role</div>
                 <div className="text-muted-foreground">
-                  {profileDetail.is_instructor ? 'Instructor' : 'Student'}
+                  {profile.is_instructor ? 'Instructor' : 'Student'}
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <ClientProfileActions profileDetail={profileDetail} profileId={params.profile_id} />
+        <ClientProfileActions profile={profile} />
       </div>
     </>
   )
