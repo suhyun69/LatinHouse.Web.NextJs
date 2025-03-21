@@ -11,11 +11,11 @@ type Profile = {
   profile_id: string
   nickname: string
   gender: string
-  isInstructor: boolean
+  is_instructor: boolean
 }
 
 export function ProfileCard({ profile }: { profile: Profile }) {
-  
+
   const { profile: currentProfile } = useProfile()
 
   return (
@@ -57,7 +57,7 @@ export function ProfileCard({ profile }: { profile: Profile }) {
               <div>
                 <div className="font-medium">Role</div>
                 <div className="text-muted-foreground">
-                  {profile.isInstructor ? 'Instructor' : 'Student'}
+                  {profile.is_instructor ? 'Instructor' : 'Student'}
                 </div>
               </div>
             </div>
