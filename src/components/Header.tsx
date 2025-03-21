@@ -61,6 +61,10 @@ export function Header() {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push(`/profile/${profile?.id}`)}>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>프로필</span>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push('/lesson/form')}>
                   <Plus className="mr-2 h-4 w-4" />
                   <span>수업 생성</span>
@@ -100,7 +104,7 @@ export function Header() {
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push('/signin')}>
+                <DropdownMenuItem onClick={() => router.push('/signup')}>
                   <UserPlus className="mr-2 h-4 w-4" />
                   <span>회원가입</span>
                 </DropdownMenuItem>
