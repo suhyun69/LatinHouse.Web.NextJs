@@ -5,26 +5,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { User } from "lucide-react"
 import { formatGender } from "@/lib/utils"
 import RegisterInstructor from "./RegisterInstructor"
-import { Header } from '@/components/Header'
-
-type Profile = {
-  profile_id: string
-  nickname: string
-  gender: string
-  is_instructor: boolean
-  created_at: string
-}
+import { Header } from '@/components/header'
+import { useProfile } from "@/hooks/useProfile"
+import { ClientProfileActions } from "./ClientProfileActions"
 
 export default async function ProfilePage({ params }: { params: { profile_id: string } }) {
   const supabase = createServerComponentClient({ cookies })
   
-  const { data: profile } = await supabase
+  const { data: profileDetail } = await supabase
     .from('profiles')
     .select('*')
     .eq('profile_id', params.profile_id)
     .single()
 
-  if (!profile) {
+  if (!profileDetail) {
     return <div className="flex justify-center items-center min-h-screen">Profile not found</div>
   }
 
@@ -35,15 +29,15 @@ export default async function ProfilePage({ params }: { params: { profile_id: st
         <Card>
           <CardHeader className="flex flex-col items-center text-center">
             <Avatar className="h-32 w-32 mb-4">
-              <AvatarImage src="" alt={profile.nickname} />
+              <AvatarImage src="" alt={profileDetail.nickname} />
               <AvatarFallback>
                 <User className="h-16 w-16" />
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-3xl mb-2">{profile.nickname}</CardTitle>
+              <CardTitle className="text-3xl mb-2">{profileDetail.nickname}</CardTitle>
               <div className="text-sm text-muted-foreground">
-                {profile.profile_id}
+                {profileDetail.profile_id}
               </div>
             </div>
           </CardHeader>
@@ -52,24 +46,20 @@ export default async function ProfilePage({ params }: { params: { profile_id: st
               <div>
                 <div className="font-medium">Gender</div>
                 <div className="text-muted-foreground">
-                  {formatGender(profile.gender)}
+                  {formatGender(profileDetail.gender)}
                 </div>
               </div>
               <div>
                 <div className="font-medium">Role</div>
                 <div className="text-muted-foreground">
-                  {profile.is_instructor ? 'Instructor' : 'Student'}
+                  {profileDetail.is_instructor ? 'Instructor' : 'Student'}
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {!profile.is_instructor && (
-          <div className="flex justify-center">
-            <RegisterInstructor profileId={profile.profile_id} />
-          </div>
-        )}
+        <ClientProfileActions profileDetail={profileDetail} profileId={params.profile_id} />
       </div>
     </>
   )
