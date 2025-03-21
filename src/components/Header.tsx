@@ -12,10 +12,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
+import { supabase } from "@/lib/supabase"
+import * as React from "react"
 
 export function Header() {
   const { profile, setProfile } = useProfile()
   const router = useRouter()
+  const [profiles, setProfiles] = React.useState<Array<{ profile_id: string; nickname: string; gender: string }>>([])
+
+  // 프로필 목록 조회
+  React.useEffect(() => {
+    const fetchProfiles = async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('profile_id, nickname, gender')
+        .order('created_at', { ascending: false })
+      
+      if (data) setProfiles(data)
+    }
+
+    fetchProfiles()
+  }, [])
 
   return (
     <header>
@@ -68,7 +85,22 @@ export function Header() {
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => router.push('/signup')}>
+                <DropdownMenuLabel>프로필 선택</DropdownMenuLabel>
+                {profiles.map((p) => (
+                  <DropdownMenuItem 
+                    key={p.profile_id}
+                    onClick={() => setProfile({ 
+                      id: p.profile_id, 
+                      nickname: p.nickname, 
+                      avatar_url: '' 
+                    })}
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    <span>{p.nickname}</span>
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push('/signin')}>
                   <UserPlus className="mr-2 h-4 w-4" />
                   <span>회원가입</span>
                 </DropdownMenuItem>
