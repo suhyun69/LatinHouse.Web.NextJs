@@ -1,7 +1,7 @@
 "use client"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Bell, User, LogOut, Plus } from "lucide-react"
+import { Bell, User, LogOut, Plus, LogIn, UserPlus } from "lucide-react"
 import { useProfile } from "@/hooks/useProfile"
 import { useRouter } from "next/navigation"
 import {
@@ -16,14 +16,6 @@ import {
 export function Header() {
   const { profile, setProfile } = useProfile()
   const router = useRouter()
-
-  const handleLogin = () => {
-    setProfile({
-      id: 'test-id',
-      nickname: 'John Doe',
-      avatar_url: ''
-    })
-  }
 
   return (
     <header>
@@ -65,14 +57,23 @@ export function Header() {
             </DropdownMenu>
           </div>
         ) : (
-          // <div onClick={() => router.push('/signup')}>
-          <div onClick={handleLogin}>
-            <Avatar>
-              <AvatarImage src="" alt="Anonymous" />
-              <AvatarFallback>
-                <User className="h-5 w-5" />
-              </AvatarFallback>
-            </Avatar>
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="cursor-pointer">
+                  <AvatarImage src="" alt="Anonymous" />
+                  <AvatarFallback>
+                    <User className="h-5 w-5" />
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => router.push('/signup')}>
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  <span>회원가입</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         )}
       </div>
