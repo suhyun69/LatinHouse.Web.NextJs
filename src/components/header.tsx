@@ -125,6 +125,11 @@ export function Header() {
                   <span>친구 관리</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push('/admin/create-profile')}>
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  <span>프로필 생성</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>로그아웃</span>

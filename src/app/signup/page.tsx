@@ -6,6 +6,7 @@ import { ProfileRequest } from "../api/profiles/route"
 import { ProfileCreateForm } from "@/components/profile-create-form"
 import { HeaderTitle } from "@/components/header-title"
 import { supabase } from "@/lib/supabase"
+import { SignUpForm } from "@/components/signup-form"
 
 export default function SignUp() {
 
@@ -36,7 +37,7 @@ export default function SignUp() {
       <HeaderTitle title="회원가입" />
       <div className="container mx-auto px-4 py-8 flex justify-center">
         <div className="max-w-sm w-full">
-          <ProfileCreateForm onSubmit={handleSubmit} />
+          <SignUpForm onSubmit={handleSubmit} />
         </div>
       </div>
     </>

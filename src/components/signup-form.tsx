@@ -18,11 +18,11 @@ import { isEmpty } from "@/lib/utils"
 import { ProfileRequest } from "@/app/api/profiles/route"
 import { Loader2 } from "lucide-react"
 
-interface ProfileCreateFormProps {
+interface SignUpFormProps {
   onSubmit: (data: ProfileRequest) => Promise<void>
 }
 
-export function ProfileCreateForm({ onSubmit }: ProfileCreateFormProps) {
+export function SignUpForm({ onSubmit }: SignUpFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // 랜덤 ID 생성 함수
@@ -155,7 +155,7 @@ export function ProfileCreateForm({ onSubmit }: ProfileCreateFormProps) {
         <CardFooter>
           <Button 
             type="submit"
-            className="w-full" 
+            className="w-full bg-[#FEE500] text-black" 
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -164,7 +164,7 @@ export function ProfileCreateForm({ onSubmit }: ProfileCreateFormProps) {
                 Creating...
               </div>
             ) : (
-              "Create Profile"
+              "카카오톡 회원가입"
             )}
           </Button>
         </CardFooter>
