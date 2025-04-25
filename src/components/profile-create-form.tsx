@@ -155,7 +155,7 @@ export function ProfileCreateForm({ onSubmit }: ProfileCreateFormProps) {
         <CardFooter>
           <Button 
             type="submit"
-            className="w-full" 
+            className="w-full bg-[#FEE500] text-black" 
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -164,7 +164,7 @@ export function ProfileCreateForm({ onSubmit }: ProfileCreateFormProps) {
                 Creating...
               </div>
             ) : (
-              "Create profile"
+              "카카오톡 회원가입"
             )}
           </Button>
         </CardFooter>
