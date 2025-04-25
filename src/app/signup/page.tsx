@@ -1,0 +1,44 @@
+// src > app > signup > page.tsx
+"use client"
+
+import { toast } from "sonner"
+import { ProfileRequest } from "../api/profiles/route"
+import { ProfileCreateForm } from "@/components/profile-create-form"
+import { HeaderTitle } from "@/components/header-title"
+import { supabase } from "@/lib/supabase"
+
+export default function SignUp() {
+
+  const handleSubmit = async (data: ProfileRequest) => {
+    // ✅ 입력 데이터 임시 저장
+    sessionStorage.setItem("signup_data", JSON.stringify(data))
+
+    // ✅ 카카오 로그인 시작
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "kakao",
+        options: {
+          redirectTo: `${window.location.origin}/api/auth/callback`,
+          queryParams: {
+            scope: "account_email",
+          },
+        },
+      })
+
+      if (error) throw error
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "카카오 로그인에 실패했습니다.")
+    }
+  }
+
+  return (
+    <>
+      <HeaderTitle title="회원가입" />
+      <div className="container mx-auto px-4 py-8 flex justify-center">
+        <div className="max-w-sm w-full">
+          <ProfileCreateForm onSubmit={handleSubmit} />
+        </div>
+      </div>
+    </>
+  )
+}
