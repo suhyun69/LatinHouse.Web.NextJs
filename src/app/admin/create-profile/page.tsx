@@ -5,7 +5,6 @@ import { toast } from "sonner"
 import { ProfileRequest } from "@/app/api/profiles/route"
 import { ProfileCreateForm } from "@/components/profile-create-form"
 import { HeaderTitle } from "@/components/header-title"
-import { supabase } from "@/lib/supabase"
 import { useRouter } from "next/navigation"
 
 export default function CreateProfile() {

@@ -3,7 +3,6 @@
 
 import { toast } from "sonner"
 import { ProfileRequest } from "../api/profiles/route"
-import { ProfileCreateForm } from "@/components/profile-create-form"
 import { HeaderTitle } from "@/components/header-title"
 import { supabase } from "@/lib/supabase"
 import { SignUpForm } from "@/components/signup-form"
