@@ -46,7 +46,7 @@ export default function Home() {
     <>
       <Header />
       <div className="container mx-auto px-4 py-8 flex justify-center">
-        <div className="max-w-2xl w-full">
+        <div className="max-w-sm md:max-w-2xl w-full">
           <LessonBadgeList
             images={images}
             selected={selectedBadge}
