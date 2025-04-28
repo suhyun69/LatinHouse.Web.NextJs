@@ -448,7 +448,7 @@ export function LessonForm({ lesson, loginProfile, friends, onSubmit, onUploadIm
                     </SelectItem>
                   )}
                   {friends?.
-                    filter((friend) => friend.gender === "M").
+                    filter((friend) => friend.gender === "M" && friend.is_instructor).
                     map((friend) => (
                       <SelectItem key={friend.id} value={friend.id ?? ""}>
                         {friend.nickname}
@@ -470,7 +470,7 @@ export function LessonForm({ lesson, loginProfile, friends, onSubmit, onUploadIm
                     </SelectItem>
                   )}
                   {friends?.
-                    filter((friend) => friend.gender === "F").
+                    filter((friend) => friend.gender === "F" && friend.is_instructor).
                     map((friend) => (
                       <SelectItem key={friend.id} value={friend.id ?? ""}>
                         {friend.nickname}
