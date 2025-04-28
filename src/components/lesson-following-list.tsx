@@ -35,7 +35,7 @@ export function LessonFollowingList({ payments, onCancel }: LessonFollowingListP
       <div className="container mx-auto flex justify-center">
         <div className="max-w-sm w-full">
           {payments.map((payment) => (
-            <div key={payment.id} className="flex gap-2">
+            <div key={payment.id} className="flex gap-2 mt-2">
               {/* 이미지 카드 */}
               <div className="w-1/3 min-w-[120px] rounded-lg overflow-hidden shadow border">
                 <img

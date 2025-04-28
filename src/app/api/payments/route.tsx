@@ -92,6 +92,7 @@ export async function GET(request: Request) {
     `)
   if (created_by) query = query.eq("created_by", created_by)
   if (lesson_no) query = query.eq("lesson_no", lesson_no)
+  query = query.order('created_at', { ascending: false })
 
   const { data, error } = await query
 
