@@ -6,6 +6,7 @@ export type ProfileView = {
   nickname: string
   gender: string
   is_instructor: boolean
+  is_admin: boolean
   avatar_url: string
 }
 
@@ -22,7 +23,7 @@ export async function GET(
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('id, nickname, gender, is_instructor, avatar_url')
+    .select('id, nickname, gender, is_instructor, is_admin, avatar_url')
     .eq('id', profile_id)
     .single()
 
@@ -42,6 +43,7 @@ export async function GET(
     nickname: data.nickname,
     gender: data.gender,
     is_instructor: data.is_instructor,
+    is_admin: data.is_admin,
     avatar_url: data.avatar_url,
   }
 

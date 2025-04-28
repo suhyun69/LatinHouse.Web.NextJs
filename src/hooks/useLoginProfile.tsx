@@ -6,6 +6,7 @@ type LoginProfile = {
   nickname: string
   gender: string
   is_instructor: boolean
+  is_admin: boolean
   avatar_url: string
 } | null
 
