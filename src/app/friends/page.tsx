@@ -74,7 +74,7 @@ export default function FriendsPage() {
       if (failed) {
         toast.error(failed?.message || '일부 친구 추가 요청이 실패했습니다.')
       } else {
-        toast.success('친구 요청이 성공적으로 전송되었습니다.')
+        toast.success('친구 요청이 전송되었습니다.')
       }
   
       // 예: 성공한 데이터만 모아서 상태 업데이트

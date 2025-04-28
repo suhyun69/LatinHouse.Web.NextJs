@@ -32,6 +32,7 @@ export function FriendAddDialog(props : FriendAddDialogProps) {
 
   const [profiles, setProfiles] = useState<ProfileView[]>([])
   const [selectedProfiles, setSelectedProfiles] = useState<ProfileView[]>([])
+  const [searchInput, setSearchInput] = useState<string>('')
 
   useEffect(() => {
 
@@ -62,42 +63,62 @@ export function FriendAddDialog(props : FriendAddDialogProps) {
             </DialogDescription>
           </DialogHeader>
           <Command className="overflow-hidden rounded-t-none border-t bg-transparent">
-            <CommandInput placeholder="Search user..." />
+            <CommandInput
+              placeholder="Search user..."
+              value={searchInput}
+              onValueChange={(value) => setSearchInput(value)}
+            />
             <CommandList>
-              <CommandEmpty>No users found.</CommandEmpty>
-              <CommandGroup className="p-2">
-                {profiles
-                  .filter((profile) => profile.id !== props.loginProfile?.id)
-                  .map((profile) => (
-                    <CommandItem
-                      key={profile.id}
-                      className="flex items-center px-2"
-                      onSelect={() => {
-                        if (selectedProfiles.includes(profile)) {
-                          setSelectedProfiles(selectedProfiles.filter((p) => p.id !== profile.id))
-                        } else {
-                          setSelectedProfiles([...selectedProfiles, profile])
-                        }
-                      }}                    
-                    >
-                    <Avatar>
-                      <AvatarImage src={profile.avatar_url} alt="Image" />
-                      <AvatarFallback>{profile.nickname[0]}</AvatarFallback>
-                    </Avatar>
-                    <div className="ml-2">
-                      <p className="text-sm font-medium leading-none">
-                        {profile.nickname}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {profile.id}
-                      </p>
+              {searchInput === '' ? (
+                <div className="p-4 text-center text-sm text-muted-foreground">
+                  ID를 입력하세요.
+                </div>
+              ) : (
+                <>
+                  {profiles.filter((profile) =>
+                    profile.id.includes(searchInput) && profile.id !== props.loginProfile?.id
+                  ).length === 0 ? (
+                    <div className="p-4 text-center text-sm text-muted-foreground">
+                      No users found.
                     </div>
-                    {selectedProfiles.includes(profile) ? (
-                      <Check className="ml-auto flex h-5 w-5 text-primary" />
-                    ) : null}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+                  ) : (
+                    <CommandGroup className="p-2">
+                      {profiles
+                        .filter((profile) =>
+                          profile.id.includes(searchInput) && profile.id !== props.loginProfile?.id
+                        )
+                        .map((profile) => (
+                          <CommandItem
+                            key={profile.id}
+                            onSelect={() => {
+                              if (selectedProfiles.includes(profile)) {
+                                setSelectedProfiles(selectedProfiles.filter((p) => p.id !== profile.id))
+                              } else {
+                                setSelectedProfiles([...selectedProfiles, profile])
+                              }
+                            }}
+                          >
+                            <Avatar>
+                              <AvatarImage src={profile.avatar_url} alt="Image" />
+                              <AvatarFallback>{profile.nickname[0]}</AvatarFallback>
+                            </Avatar>
+                            <div className="ml-2">
+                              <p className="text-sm font-medium leading-none">
+                                {profile.nickname}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {profile.id}
+                              </p>
+                            </div>
+                            {selectedProfiles.includes(profile) ? (
+                              <Check className="ml-auto flex h-5 w-5 text-primary" />
+                            ) : null}
+                          </CommandItem>
+                        ))}
+                    </CommandGroup>
+                  )}
+                </>
+              )}
             </CommandList>
           </Command>
           <DialogFooter className="flex items-center border-t p-4 sm:justify-between">
