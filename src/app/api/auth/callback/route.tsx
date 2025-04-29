@@ -12,6 +12,8 @@ export async function POST(request: Request) {
   try {
     const { access_token } = await request.json()
 
+    console.log('access_token:', access_token)
+
     if (!access_token) {
       throw new Error('Access token not provided')
     }
@@ -25,7 +27,11 @@ export async function POST(request: Request) {
       refresh_token: '' // refresh_token이 없는 경우 빈 문자열 전달
     })
 
+    console.log('111')
+
     if (error) throw error
+
+    console.log('user:', user)
 
     if (user) {
       // 기존 프로필 확인
