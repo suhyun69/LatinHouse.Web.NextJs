@@ -2,6 +2,12 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
+export async function GET(request: Request) {
+  // GET 요청이 오면 /auth/callback 페이지로 리다이렉트
+  const requestUrl = new URL(request.url)
+  return NextResponse.redirect(new URL('/auth/callback', requestUrl.origin))
+}
+
 export async function POST(request: Request) {
   try {
     const { access_token } = await request.json()
