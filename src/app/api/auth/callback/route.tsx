@@ -30,7 +30,7 @@ export async function GET(request: Request) {
           )
         } else {
           return NextResponse.redirect(
-            new URL(`/signup}`, requestUrl.origin)
+            new URL(`/signup`, requestUrl.origin)
           )
         }
       }
