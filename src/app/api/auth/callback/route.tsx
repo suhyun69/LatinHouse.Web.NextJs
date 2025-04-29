@@ -2,37 +2,37 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   try {
-    const requestUrl = new URL(request.url)
-    const code = requestUrl.searchParams.get('code')
-    
-    if (code) {
-      const cookieStore = cookies()
-      const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
-      const { data: { user }, error } = await supabase.auth.exchangeCodeForSession(code)
+    const { access_token } = await request.json()
 
-      if (error) throw error
+    if (!access_token) {
+      throw new Error('Access token not provided')
+    }
 
-      if (user) {
-        // 기존 프로필 확인
-        const { data: existingProfile } = await supabase
-          .from('profiles')
-          .select()
-          .eq('uid', user.id)
-          .single()
+    const cookieStore = cookies()
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
 
-        if (existingProfile) {
-          // 기존 프로필이 있는 경우 로그인 처리
-          return NextResponse.redirect(
-            new URL(`/api/login?profile=${encodeURIComponent(JSON.stringify(existingProfile))}`, 
-            requestUrl.origin)
-          )
-        } else {
-          return NextResponse.redirect(
-            new URL(`/signup`, requestUrl.origin)
-          )
-        }
+    // access_token을 직접 세션으로 교환하는 방법은 supabase auth API 사용
+    const { data: { user }, error } = await supabase.auth.setSession({
+      access_token,
+      refresh_token: '' // refresh_token이 없는 경우 빈 문자열 전달
+    })
+
+    if (error) throw error
+
+    if (user) {
+      // 기존 프로필 확인
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select()
+        .eq('uid', user.id)
+        .single()
+
+      if (existingProfile) {
+        return NextResponse.redirect(new URL('/', request.url))
+      } else {
+        return NextResponse.redirect(new URL('/signup', request.url))
       }
     }
 
@@ -41,4 +41,4 @@ export async function GET(request: Request) {
     console.error('Auth callback error:', error)
     return NextResponse.redirect(new URL('/error', request.url))
   }
-} 
+}
