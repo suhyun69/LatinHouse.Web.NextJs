@@ -51,6 +51,6 @@ export async function POST(request: Request) {
     throw new Error('Authentication failed')
   } catch (error) {
     console.error('Auth callback error:', error)
-    return NextResponse.redirect(new URL('/error', request.url))
+    return NextResponse.redirect(new URL('/error4', request.url))
   }
 }

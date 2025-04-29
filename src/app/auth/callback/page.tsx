@@ -22,11 +22,11 @@ export default function AuthCallbackPage() {
           if (res.ok) {
             router.replace('/') // 성공하면 홈으로
           } else {
-            router.replace('/error') // 실패하면 에러로
+            router.replace('/error2') // 실패하면 에러로
           }
         })
     } else {
-      router.replace('/error')
+      router.replace('/error3')
     }
   }, [router])
 
