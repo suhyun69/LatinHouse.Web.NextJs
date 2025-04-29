@@ -7,30 +7,37 @@ export default function AuthCallbackPage() {
   const router = useRouter()
 
   useEffect(() => {
-    const fragment = new URLSearchParams(window.location.hash.slice(1)) // # 제거
+    const fragment = new URLSearchParams(window.location.hash.slice(1)) // '#' 제거
     const accessToken = fragment.get('access_token')
+    const refreshToken = fragment.get('refresh_token') // 추가!
 
-    if (accessToken) {
+    if (accessToken && refreshToken) {
       fetch('/api/auth/callback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ access_token: accessToken }),
+        body: JSON.stringify({ 
+          access_token: accessToken,
+          refresh_token: refreshToken
+        }),
       })
-        .then(res => {
+        .then(async res => {
+          const data = await res.json()
           if (res.ok) {
-            router.replace('/') // 성공하면 홈으로
+            router.replace('/')
           } else {
-            router.replace('/error2') // 실패하면 에러로
+            console.error('Auth failed:', data.error)
+            router.replace('/error2')
           }
         })
     } else {
+      console.error('Missing token:', { accessToken, refreshToken })
       router.replace('/error3')
     }
   }, [router])
 
   return (
-    <div>로그인 처리 중...</div>
+    <div>로그인 처리 중입니다...</div>
   )
 }
