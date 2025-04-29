@@ -54,6 +54,61 @@ export default function NotiPage() {
     setSelectedNotice(notice)
   }
 
+  const addFriend = async (notice: NoticeView) => {
+    if (!loginProfile?.id) {
+      toast.error('로그인 정보가 없습니다.')
+      return
+    }
+  
+    const friendRequests = [
+      { from: notice.friend_id, to: loginProfile.id, created_by: loginProfile.id },
+      { from: loginProfile.id, to: notice.friend_id, created_by: loginProfile.id }
+    ]
+  
+    try {
+      // 친구 요청 양방향 등록
+      const friendResponses = await Promise.all(
+        friendRequests.map((data) =>
+          fetch(`/api/friends`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          })
+        )
+      )
+  
+      // 둘 중 하나라도 실패했는지 검사
+      if (!friendResponses.every((res) => res.ok)) {
+        throw new Error('친구 등록 실패')
+      }
+  
+      // 알림 상태 업데이트
+      const noticeResponse = await fetch(`/api/notices/${notice.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: 'read',
+          created_by: loginProfile.id,
+        }),
+      })
+  
+      if (!noticeResponse.ok) {
+        throw new Error('알림 상태 업데이트 실패')
+      }
+  
+      toast.success('친구 요청을 수락했습니다.')
+      setNotices((prev) =>
+        prev.map((n) =>
+          n.id === notice.id ? { ...n, status: 'read' } : n
+        )
+      )
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '친구 요청 수락에 실패했습니다.')
+    }
+  }
+  
   return (
     <>  
       <Header/>
@@ -89,6 +144,9 @@ export default function NotiPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>닫기</AlertDialogCancel>
+            {selectedNotice?.type === 'friend_confirm' && selectedNotice?.status === 'unread' && (
+              <AlertDialogCancel onClick={() => addFriend(selectedNotice)}>수락</AlertDialogCancel>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

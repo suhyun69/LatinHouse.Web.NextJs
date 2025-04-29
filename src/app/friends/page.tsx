@@ -54,6 +54,26 @@ export default function FriendsPage() {
     try {
       const responses = await Promise.all(
         selectedProfiles.map((profile) =>
+
+          // ✅ 2. 알림 생성 요청 (단일 fetch도 배열에 포함)
+          fetch(`/api/notices`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              from: loginProfile?.id || '',
+              to: profile.id || '',
+              title: `"${loginProfile?.nickname}"님이 친구 요청을 보냈습니다.`,
+              content: `"${loginProfile?.nickname}"님이 친구 요청을 보냈습니다.`,
+              type: 'friend_confirm',
+              friend_id: loginProfile?.id,
+              status: 'unread',
+              created_by: loginProfile?.id || ''
+            })
+          })
+
+          /*
           fetch(`/api/friends`, {
             method: 'POST',
             headers: {
@@ -65,6 +85,7 @@ export default function FriendsPage() {
               created_by: loginProfile?.id,
             }),
           })
+          */
         )
       )
   

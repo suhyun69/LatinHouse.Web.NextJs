@@ -17,6 +17,7 @@ export type NoticeView = {
   title: string
   content: string
   type: string
+  friend_id: string
   status: string
   created_at: string
 }
@@ -25,7 +26,7 @@ export async function POST(
   request: Request,
 ) {
   const body = await request.json()
-  const { from, to, title, content, type, status, created_by } = body
+  const { from, to, title, content, type, friend_id, status, created_by} = body
 
   const { data, error } = await supabase
     .from('notices')
@@ -36,6 +37,7 @@ export async function POST(
         title,
         content,
         type,
+        friend_id,
         status,
         created_at: new Date().toISOString(),
         created_by
@@ -68,6 +70,7 @@ export async function GET(
       title,
       content,
       type,
+      friend_id,
       status,
       created_at
     `)
@@ -92,6 +95,7 @@ export async function GET(
     title: notice.title,
     content: notice.content,
     type: notice.type,
+    friend_id: notice.friend_id,
     status: notice.status,
     created_at: notice.created_at,
   }))
