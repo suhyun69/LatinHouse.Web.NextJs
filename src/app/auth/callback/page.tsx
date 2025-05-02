@@ -11,6 +11,9 @@ export default function AuthCallbackPage() {
     const accessToken = fragment.get('access_token')
     const refreshToken = fragment.get('refresh_token') // 추가!
 
+    console.log('accessToken', accessToken)
+    console.log('refreshToken', refreshToken)
+
     if (accessToken && refreshToken) {
       fetch('/api/auth/callback', {
         method: 'POST',
