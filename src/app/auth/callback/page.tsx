@@ -28,10 +28,11 @@ export default function AuthCallbackPage() {
         }),
       })
         .then(async res => {
-          const data = await res.json()
-          if (res.ok) {
-            router.replace('/') // 로그인 완료 → 홈으로
+          // const data = await res.json()
+          if (res.redirected) {
+            window.location.href = res.url // 실제 리디렉션
           } else {
+            const data = await res.json()
             console.error('Login error:', data.error)
             // router.replace('/error')
           }

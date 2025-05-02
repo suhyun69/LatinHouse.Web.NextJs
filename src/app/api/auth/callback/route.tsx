@@ -20,6 +20,8 @@ export async function POST(request: Request) {
       refresh_token,
     })
 
+    const baseUrl = new URL(request.url).origin
+
     if (error) throw error
 
     if (user) {
@@ -32,7 +34,8 @@ export async function POST(request: Request) {
       if (existingProfile) {
         return NextResponse.redirect(new URL('/', request.url))
       } else {
-        return NextResponse.redirect(new URL('/signup', request.url))
+        return NextResponse.redirect(`${baseUrl}/signup`)
+        // return NextResponse.redirect(new URL('/signup', request.url))
       }
     }
 
