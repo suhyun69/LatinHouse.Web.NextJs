@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       if (existingProfile) {
         return NextResponse.redirect(new URL('/', request.url))
       } else {
-        return NextResponse.redirect(`${baseUrl}/signup`)
+        return NextResponse.redirect(`${baseUrl}/signup/finalize`)
         // return NextResponse.redirect(new URL('/signup', request.url))
       }
     }
