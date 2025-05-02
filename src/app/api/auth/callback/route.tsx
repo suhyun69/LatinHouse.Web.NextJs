@@ -1,35 +1,16 @@
+// /api/auth/callback/route.ts
+
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
-export async function GET(req: Request) {
-  
+export async function POST(request: Request) {
   try {
-    const { searchParams } = new URL(req.url)
-    const code = searchParams.get('code')
+    const { access_token, refresh_token } = await request.json()
 
-    if (!code) throw new Error('Authorization code not found')
-
-    // 카카오 토큰 요청
-    const tokenRes = await fetch('https://kauth.kakao.com/oauth/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type: 'authorization_code',
-        client_id: process.env.KAKAO_REST_API_KEY!,
-        redirect_uri: process.env.KAKAO_REDIRECT_URI!, // 이 URI가 현재 이 API 엔드포인트여야 함
-        code,
-      }),
-    })
-
-    const tokenData = await tokenRes.json()
-
-    if (!tokenRes.ok) {
-      console.error('Kakao token fetch error', tokenData)
-      throw new Error('Failed to fetch token from Kakao')
+    if (!access_token || !refresh_token) {
+      throw new Error('Access token or refresh token not provided')
     }
-
-    const { access_token, refresh_token } = tokenData
 
     const cookieStore = cookies()
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
@@ -49,15 +30,18 @@ export async function GET(req: Request) {
         .single()
 
       if (existingProfile) {
-        return NextResponse.redirect(new URL('/', req.url))
+        return NextResponse.redirect(new URL('/', request.url))
       } else {
-        return NextResponse.redirect(new URL('/signup', req.url))
+        return NextResponse.redirect(new URL('/signup', request.url))
       }
     }
 
     throw new Error('No user session established')
-  } catch (err) {
-    console.error('Callback error', err)
-    return NextResponse.redirect(new URL('/error', req.url))
+  } catch (error) {
+    console.error('Auth callback error:', error)
+    return NextResponse.json(
+      { error: (error as Error).message || 'Unknown error' },
+      { status: 200 }
+    )
   }
 }
