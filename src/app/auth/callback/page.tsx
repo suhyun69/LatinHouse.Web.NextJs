@@ -33,16 +33,16 @@ export default function AuthCallbackPage() {
             router.replace('/') // 로그인 완료 → 홈으로
           } else {
             console.error('Login error:', data.error)
-            router.replace('/error')
+            // router.replace('/error')
           }
         })
         .catch((err) => {
           console.error('Network error:', err)
-          router.replace('/error')
+          // router.replace('/error')
         })
     } else {
       console.error('Missing token in URL hash')
-      router.replace('/error')
+      // router.replace('/error')
     }
   }, [router])
 
