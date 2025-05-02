@@ -36,6 +36,7 @@ export default function AuthCallbackPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           access_token: accessToken,
           refresh_token: refreshToken,

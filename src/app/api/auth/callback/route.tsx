@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
     const { data: { user }, error } = await supabase.auth.setSession({
       access_token,
-      refresh_token,
+      refresh_token
     })
 
     const baseUrl = new URL(request.url).origin
