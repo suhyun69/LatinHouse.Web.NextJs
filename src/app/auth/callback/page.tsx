@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 
 export default function AuthCallbackPage() {
   const router = useRouter()
+  const signupData = JSON.parse(sessionStorage.getItem('signup_data') || '{}')
 
   useEffect(() => {
     // Supabase OAuth 로그인 성공 시, URL에 해시 형태로 access_token 등이 붙음
@@ -25,6 +26,7 @@ export default function AuthCallbackPage() {
         body: JSON.stringify({
           access_token: accessToken,
           refresh_token: refreshToken,
+          signup_data: signupData,
         }),
       })
         .then(async res => {
