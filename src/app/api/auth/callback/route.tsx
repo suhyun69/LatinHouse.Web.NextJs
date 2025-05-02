@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       throw new Error('Failed to fetch access token from Kakao')
     }
 
-    const { access_token, refresh_token, id_token } = tokenData
+    const { access_token, refresh_token } = tokenData
 
     const cookieStore = cookies()
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
