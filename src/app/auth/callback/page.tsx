@@ -7,9 +7,11 @@ export default function AuthCallbackPage() {
   const router = useRouter()
 
   useEffect(() => {
-    const fragment = new URLSearchParams(window.location.hash.slice(1)) // '#' 제거
-    const accessToken = fragment.get('access_token')
-    const refreshToken = fragment.get('refresh_token') // 추가!
+    // 카카오 로그인은 쿼리스트링에 토큰을 포함시킴
+    const params = new URLSearchParams(window.location.search.slice(1))
+
+    const accessToken = params.get('access_token')
+    const refreshToken = params.get('refresh_token')
 
     console.log('accessToken', accessToken)
     console.log('refreshToken', refreshToken)
