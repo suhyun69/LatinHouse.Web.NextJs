@@ -7,25 +7,18 @@ export default function AuthCallbackPage() {
   const router = useRouter()
 
   useEffect(() => {
-    // 카카오 로그인은 쿼리스트링에 토큰을 포함시킴
     const params = new URLSearchParams(window.location.search.slice(1))
+    const code = params.get('code')
 
-    const accessToken = params.get('access_token')
-    const refreshToken = params.get('refresh_token')
+    console.log('Kakao code:', code)
 
-    console.log('accessToken', accessToken)
-    console.log('refreshToken', refreshToken)
-
-    if (accessToken && refreshToken) {
+    if (code) {
       fetch('/api/auth/callback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          access_token: accessToken,
-          refresh_token: refreshToken
-        }),
+        body: JSON.stringify({ code }),
       })
         .then(async res => {
           const data = await res.json()
@@ -37,12 +30,10 @@ export default function AuthCallbackPage() {
           }
         })
     } else {
-      console.error('Missing token:', { accessToken, refreshToken })
+      console.error('Missing code param')
       router.replace('/error3')
     }
   }, [router])
 
-  return (
-    <div>로그인 처리 중입니다...</div>
-  )
+  return <div>카카오 로그인 처리 중입니다...</div>
 }
