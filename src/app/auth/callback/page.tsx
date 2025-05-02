@@ -1,3 +1,4 @@
+// src/app/auth/callback/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -8,35 +9,28 @@ export default function AuthCallbackPage() {
   const [signupData, setSignupData] = useState(null)
 
   useEffect(() => {
-    // ✅ 브라우저 환경에서만 실행
-    const storedData = sessionStorage.getItem('signup_data')
-    if (storedData) {
+    const stored = sessionStorage.getItem('signup_data')
+    if (stored) {
       try {
-        setSignupData(JSON.parse(storedData))
+        setSignupData(JSON.parse(stored))
       } catch (e) {
-        console.error(e instanceof Error ? e.message : 'Invalid signup data format')
+        console.error(e instanceof Error ? e.message : 'Invalid signup_data format')
       }
     }
   }, [])
 
   useEffect(() => {
-    if (!signupData) return // signup data 없으면 대기
+    if (!signupData) return
 
-    // Supabase OAuth 로그인 성공 시, URL에 해시 형태로 access_token 등이 붙음
     const hashParams = new URLSearchParams(window.location.hash.slice(1))
     const accessToken = hashParams.get('access_token')
     const refreshToken = hashParams.get('refresh_token')
 
-    console.log('accessToken:', accessToken)
-    console.log('refreshToken:', refreshToken)
-
     if (accessToken && refreshToken) {
       fetch('/api/auth/callback', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // ✅ 쿠키 설정에 필수!
         body: JSON.stringify({
           access_token: accessToken,
           refresh_token: refreshToken,
@@ -44,28 +38,20 @@ export default function AuthCallbackPage() {
         }),
       })
         .then(async res => {
-          // const data = await res.json()
           if (res.redirected) {
-            window.location.href = res.url // 실제 리디렉션
+            window.location.href = res.url
           } else {
             const data = await res.json()
             console.error('Login error:', data.error)
-            // router.replace('/error')
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.error('Network error:', err)
-          // router.replace('/error')
         })
     } else {
       console.error('Missing token in URL hash')
-      // router.replace('/error')
     }
   }, [signupData, router])
 
-  return (
-    <div className="text-center p-4">
-      로그인 처리 중입니다...
-    </div>
-  )
+  return <div className="text-center p-4">로그인 처리 중입니다...</div>
 }

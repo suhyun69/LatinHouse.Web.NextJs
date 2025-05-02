@@ -1,4 +1,4 @@
-// /api/auth/callback/route.ts
+// src/app/api/auth/callback/route.ts
 import { cookies } from 'next/headers'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
@@ -16,14 +16,13 @@ export async function POST(request: Request) {
 
     const { data: { user }, error } = await supabase.auth.setSession({
       access_token,
-      refresh_token
+      refresh_token,
     })
 
     const baseUrl = new URL(request.url).origin
     if (error) throw error
     if (!user) throw new Error('No user session established')
 
-    // 프로필 존재 여부 확인
     const { data: existingProfile } = await supabase
       .from('profiles')
       .select()
@@ -34,11 +33,11 @@ export async function POST(request: Request) {
       return NextResponse.redirect(`${baseUrl}/`)
     }
 
-    // ✅ signup_data를 Supabase 서버 세션에 저장
+    // ✅ 서버 세션에 signup_data 저장
     const { error: sessionError } = await supabase.auth.updateUser({
       data: {
         signup_data,
-      }
+      },
     })
 
     if (sessionError) throw sessionError
