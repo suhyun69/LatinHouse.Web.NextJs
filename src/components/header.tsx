@@ -66,7 +66,7 @@ export function Header() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'kakao',
         options: {
-          redirectTo: `${window.location.origin}/api/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
             scope: 'profile_nickname profile_image account_email' // 필요한 정보 스코프
           }
