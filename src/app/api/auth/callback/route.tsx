@@ -1,44 +1,35 @@
-// ✅ src/app/api/auth/callback/route.ts
-import { cookies } from 'next/headers'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { NextResponse } from 'next/server'
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
+import { cookies } from "next/headers"
+import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
-  try {
-    const { access_token, refresh_token, signup_data } = await request.json()
+  const { code, signup_data } = await request.json()
+  if (!code) throw new Error('Authorization code not provided')
 
-    if (!access_token || !refresh_token) {
-      throw new Error('Access token or refresh token not provided')
-    }
+  const cookieStore = cookies()
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
 
-    const cookieStore = cookies()
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+  // ✅ 서버에서 직접 세션 설정
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+  if (error || !data.session?.user) throw error || new Error('Login failed')
 
-    const { data: { user }, error } = await supabase.auth.setSession({ access_token, refresh_token })
+  const user = data.session.user
 
-    const baseUrl = new URL(request.url).origin
-    if (error) throw error
-    if (!user) throw new Error('No user session established')
-
-    const { data: existingProfile } = await supabase
-      .from('profiles')
-      .select()
-      .eq('uid', user.id)
-      .single()
-
-    if (existingProfile) {
-      return NextResponse.redirect(`${baseUrl}/`)
-    }
-
-    const { error: sessionError } = await supabase.auth.updateUser({
+  // ✅ 메타데이터에 signup_data 저장
+  if (signup_data) {
+    const { error: updateError } = await supabase.auth.updateUser({
       data: { signup_data },
     })
-
-    if (sessionError) throw sessionError
-
-    return NextResponse.redirect(`${baseUrl}/signup/finalize`)
-  } catch (error) {
-    console.error('Auth callback error:', error)
-    return NextResponse.json({ error: (error as Error).message || 'Unknown error' }, { status: 200 })
+    if (updateError) throw updateError
   }
+
+  const { data: existingProfile } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('uid', user.id)
+    .single()
+
+  const baseUrl = new URL(request.url).origin
+  const redirectTo = existingProfile ? '/' : '/signup/finalize'
+  return NextResponse.redirect(`${baseUrl}${redirectTo}`)
 }

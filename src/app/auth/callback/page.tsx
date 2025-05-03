@@ -1,12 +1,18 @@
-// ✅ src/app/auth/callback/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+type SignupData = {
+  id: string
+  nickname: string
+  gender: string
+  // [key: string]: any // 추가 속성 허용
+}
+
 export default function AuthCallbackPage() {
   const router = useRouter()
-  const [signupData, setSignupData] = useState(null)
+  const [signupData, setSignupData] = useState<SignupData | null>(null)
 
   useEffect(() => {
     const stored = sessionStorage.getItem('signup_data')
@@ -14,7 +20,7 @@ export default function AuthCallbackPage() {
       try {
         setSignupData(JSON.parse(stored))
       } catch (e) {
-        console.error(e instanceof Error ? e.message : 'Invalid signup_data format')
+        console.error(e)
       }
     }
   }, [])
@@ -22,31 +28,30 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     if (!signupData) return
 
-    const hashParams = new URLSearchParams(window.location.hash.slice(1))
-    const accessToken = hashParams.get('access_token')
-    const refreshToken = hashParams.get('refresh_token')
-
-    if (accessToken && refreshToken) {
-      fetch('/api/auth/callback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ access_token: accessToken, refresh_token: refreshToken, signup_data: signupData }),
-      })
-        .then(async res => {
-          if (res.redirected) {
-            window.location.href = res.url
-          } else {
-            const data = await res.json()
-            console.error('Login error:', data.error)
-          }
-        })
-        .catch(err => {
-          console.error('Network error:', err)
-        })
-    } else {
-      console.error('Missing token in URL hash')
+    const url = new URL(window.location.href)
+    const code = url.searchParams.get('code')
+    if (!code) {
+      console.error('No code in URL')
+      return
     }
+
+    fetch('/api/auth/callback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ code, signup_data: signupData }),
+    })
+      .then(async (res) => {
+        if (res.redirected) {
+          window.location.href = res.url
+        } else {
+          const err = await res.json()
+          console.error('Callback error:', err)
+        }
+      })
+      .catch((err) => {
+        console.error('Network error:', err)
+      })
   }, [signupData, router])
 
   return <div className="text-center p-4">로그인 처리 중입니다...</div>
