@@ -18,11 +18,11 @@ export default function FinalizeSignup() {
         return router.replace('/')
       }
 
-      const profile = user.user_metadata?.signup_data
-      if (!profile) {
-        toast.error('서버 세션에 회원가입 정보가 없습니다.')
-        return router.replace('/')
-      }
+      const profile = user.user_metadata.signup_data
+      // if (!profile) {
+      //   toast.error('서버 세션에 회원가입 정보가 없습니다.')
+      //   return router.replace('/')
+      // }
 
       const res = await fetch('/api/profiles', {
         method: 'POST',
@@ -39,11 +39,22 @@ export default function FinalizeSignup() {
         return router.replace('/')
       }
 
-      toast.success('회원가입이 완료되었습니다.')
       const { profile_id } = await res.json()
 
+      // ✅ 세션 메타데이터에 프로필 요약 정보 저장
+      await supabase.auth.updateUser({
+        data: {
+          profile_id,
+          nickname: profile.nickname,
+          gender: profile.gender,
+          avatar_url: profile.avatar_url ?? null,
+        },
+      })
+
+      // signup_data 정리
       await supabase.auth.updateUser({ data: { signup_data: null } })
 
+      toast.success('회원가입이 완료되었습니다.')
       router.push(`/profile/${profile_id}`)
     }
 
