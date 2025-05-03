@@ -1,4 +1,4 @@
-// src/app/auth/callback/page.tsx
+// ✅ src/app/auth/callback/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -30,12 +30,8 @@ export default function AuthCallbackPage() {
       fetch('/api/auth/callback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // ✅ 쿠키 설정에 필수!
-        body: JSON.stringify({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          signup_data: signupData,
-        }),
+        credentials: 'include',
+        body: JSON.stringify({ access_token: accessToken, refresh_token: refreshToken, signup_data: signupData }),
       })
         .then(async res => {
           if (res.redirected) {

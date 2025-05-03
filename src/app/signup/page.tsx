@@ -1,4 +1,4 @@
-// src/app/signup/page.tsx
+// ✅ src/app/signup/page.tsx
 'use client'
 
 import { toast } from 'sonner'
@@ -9,16 +9,15 @@ import { SignUpForm } from '@/components/signup-form'
 
 export default function SignUp() {
   const handleSubmit = async (data: ProfileRequest) => {
+    
     try {
-      sessionStorage.setItem('signup_data', JSON.stringify(data)) // ✅ 사용자 입력 임시 저장
+      sessionStorage.setItem('signup_data', JSON.stringify(data))
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'kakao',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
-          queryParams: {
-            scope: 'account_email',
-          },
+          queryParams: { scope: 'account_email' },
         },
       })
 

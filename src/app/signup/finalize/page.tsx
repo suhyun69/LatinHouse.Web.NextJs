@@ -1,4 +1,4 @@
-// src/app/signup/finalize/page.tsx
+// ✅ src/app/signup/finalize/page.tsx
 'use client'
 
 import { useEffect } from 'react'
@@ -11,23 +11,17 @@ export default function FinalizeSignup() {
 
   useEffect(() => {
     const finalize = async () => {
-      const {
-        data: { user },
-        error
-      } = await supabase.auth.getUser()
+      const { data: { user }, error } = await supabase.auth.getUser()
 
       if (error || !user) {
         toast.error('사용자 인증 정보를 불러오지 못했습니다.')
-        router.replace('/')
-        return
+        return router.replace('/')
       }
 
-      const profile = user.user_metadata.signup_data
-
+      const profile = user.user_metadata?.signup_data
       if (!profile) {
         toast.error('서버 세션에 회원가입 정보가 없습니다.')
-        router.replace('/')
-        return
+        return router.replace('/')
       }
 
       const res = await fetch('/api/profiles', {
@@ -42,14 +36,12 @@ export default function FinalizeSignup() {
 
       if (!res.ok) {
         toast.error('프로필 저장에 실패했습니다.')
-        router.replace('/')
-        return
+        return router.replace('/')
       }
 
       toast.success('회원가입이 완료되었습니다.')
       const { profile_id } = await res.json()
 
-      // ✅ 세션에서 signup_data 제거
       await supabase.auth.updateUser({ data: { signup_data: null } })
 
       router.push(`/profile/${profile_id}`)
