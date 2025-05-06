@@ -31,6 +31,6 @@ export async function POST(request: Request) {
 
   const baseUrl = new URL(request.url).origin
   const redirectTo = existingProfile ? '/' : '/signup/finalize'
-  
-  return NextResponse.redirect(`${baseUrl}${redirectTo}`)
+
+  return NextResponse.redirect(`${baseUrl}${redirectTo}`, 303)
 }
