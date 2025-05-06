@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import { useLoginProfile } from '@/hooks/useLoginProfile'
+import { RenderMessage } from '@/components/render-message'
 
 export default function FinalizeSignup() {
   const router = useRouter()
@@ -55,6 +56,6 @@ export default function FinalizeSignup() {
 
     finalize()
   }, [router, setLoginProfile])
-
-  return <p className="text-center py-10">회원 정보를 저장 중입니다...</p>
+  
+  return <RenderMessage message="회원 정보를 저장 중입니다..." />
 }
