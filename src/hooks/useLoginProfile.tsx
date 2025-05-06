@@ -8,7 +8,7 @@ export type LoginProfile = {
   gender: string
   is_instructor: boolean
   is_admin: boolean
-  avatar_url: string | null
+  avatar_url: string
 } | null
 
 type LoginProfileStore = {
