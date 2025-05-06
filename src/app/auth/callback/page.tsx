@@ -32,13 +32,17 @@ export default function AuthCallbackPage() {
         credentials: 'include',
       })
 
-      const res = await fetch('/api/me')
-      if (res.ok) {
-        const { profile } = await res.json()
-        setLoginProfile(profile)
-      }
-      else {
-        alert('로그인 처리 중 오류가 발생했습니다.222')
+      try {
+        const res = await fetch('/api/me')
+        if (res.ok) {
+          const { profile } = await res.json()
+          setLoginProfile(profile)
+        } else {
+          alert('로그인 처리 중 오류가 발생했습니다.222')
+        }
+      } catch (err) {
+        console.error('me fetch error:', err)
+        alert('서버 통신 실패')
       }
 
       window.location.href = '/'
