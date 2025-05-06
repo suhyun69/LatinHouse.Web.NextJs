@@ -1,17 +1,16 @@
-// ✅ src/app/signup/page.tsx
 'use client'
 
-import { toast } from 'sonner'
-import { ProfileRequest } from '../api/profiles/route'
-import { HeaderTitle } from '@/components/header-title'
 import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
+import { HeaderTitle } from '@/components/header-title'
 import { SignUpForm } from '@/components/signup-form'
+import type { ProfileRequest } from '@/app/api/profiles/route'
 
 export default function SignUp() {
   const handleSubmit = async (data: ProfileRequest) => {
-    
     try {
       sessionStorage.setItem('signup_data', JSON.stringify(data))
+      await new Promise(res => setTimeout(res, 100)) // 작은 대기
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'kakao',

@@ -1,8 +1,7 @@
-// ✅ hooks/useLoginProfile.ts
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
-export type LoginProfile = {
+type LoginProfile = {
   id: string
   nickname: string
   gender: string
@@ -11,22 +10,22 @@ export type LoginProfile = {
   avatar_url: string
 } | null
 
-type LoginProfileStore = {
+type Store = {
   loginProfile: LoginProfile
   setLoginProfile: (profile: LoginProfile) => void
   clearLoginProfile: () => void
 }
 
-export const useLoginProfile = create<LoginProfileStore>()(
+export const useLoginProfile = create<Store>()(
   persist(
     (set) => ({
       loginProfile: null,
       setLoginProfile: (profile) => set({ loginProfile: profile }),
-      clearLoginProfile: () => set({ loginProfile: null }),
+      clearLoginProfile: () => set({ loginProfile: null })
     }),
     {
-      name: 'login-profile-storage',
-      storage: createJSONStorage(() => localStorage),
+      name: 'login-profile',
+      storage: createJSONStorage(() => localStorage)
     }
   )
 )

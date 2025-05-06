@@ -9,15 +9,16 @@ export async function GET() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) {
-    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if (!user || !user.user_metadata.profile_id) {
+    return NextResponse.json({ profile: null }, { status: 200 })
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('uid', user.id)
-    .single()
-
-  return NextResponse.json({ profile })
+  return NextResponse.json({ profile: {
+    id: user.user_metadata.profile_id,
+    nickname: user.user_metadata.nickname,
+    gender: user.user_metadata.gender,
+    avatar_url: user.user_metadata.avatar_url,
+    is_instructor: user.user_metadata.is_instructor || false,
+    is_admin: user.user_metadata.is_admin || false,
+  } })
 }
