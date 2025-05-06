@@ -4,6 +4,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLoginProfile } from '@/hooks/useLoginProfile'
+import { RenderMessage } from '@/components/render-message'
 
 type SignupData = {
   id: string
@@ -43,5 +44,5 @@ export default function AuthCallbackPage() {
     finalize()
   }, [router, setLoginProfile])
 
-  return <div className="text-center p-4">로그인 처리 중입니다...</div>
+  return <RenderMessage message="로그인 처리 중입니다..." />
 }
