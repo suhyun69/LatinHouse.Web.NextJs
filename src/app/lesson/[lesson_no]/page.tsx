@@ -12,6 +12,50 @@ import { useLoginProfile } from "@/hooks/useLoginProfile"
 import { CouponView } from "@/app/api/coupons/route"
 import { AppliedDiscount, CheckoutRequest } from "@/app/api/checkouts/route"
 import { useRouter } from "next/navigation"
+import { Metadata } from 'next'
+
+// 이 함수는 서버에서만 실행됨 (SEO, OG에 사용됨)
+export async function generateMetadata({ params }: { params: { lesson_no: string } }): Promise<Metadata> {
+  const lesson_no = params.lesson_no
+
+  // 🔁 lesson 데이터 서버에서 fetch
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/lessons/${lesson_no}`, {
+    cache: 'no-cache',
+    headers: {
+      // API 보호 필요 시 헤더에 인증 정보도 포함 가능
+    }
+  })
+
+  if (!res.ok) {
+    return {
+      title: 'LatinHouse',
+      description: '살사/바차타 수업 모아보기',
+    }
+  }
+
+  const { data: lesson } = await res.json()
+
+  return {
+    title: `${lesson.title}`,
+    description: `${lesson.title}`,
+    openGraph: {
+      title: `${lesson.title}`,
+      description: lesson.description,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/lessons/${lesson_no}`,
+      images: [
+        {
+          url: lesson.thumbnail_url || `${process.env.NEXT_PUBLIC_SITE_URL}/og-default.png`,
+          width: 1200,
+          height: 630,
+          alt: `${lesson.title}`,
+        },
+      ],
+      siteName: 'LatinHouse',
+      locale: 'ko_KR',
+      type: 'article',
+    }
+  }
+}
 
 export default function LessonDetailPage({ params }: { params: Promise<{ lesson_no: string }> }) {
   const router = useRouter()
