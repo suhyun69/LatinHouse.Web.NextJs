@@ -107,6 +107,7 @@ export default function ProfileEditPage({ params }: { params: Promise<{ profile_
     else {
       toast.success(result.message || '프로필을 수정했습니다.')
       router.replace(`/profile/${result.profile_id}`)
+      router.refresh() // 🔁 추가: 최신 상태 강제 반영
     }
   }
 
