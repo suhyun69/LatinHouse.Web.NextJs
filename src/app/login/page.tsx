@@ -1,5 +1,4 @@
 'use client'
-
 import { supabase } from '@/lib/supabase-client'
 
 export default function LoginPage() {
@@ -7,8 +6,7 @@ export default function LoginPage() {
     await supabase.auth.signInWithOAuth({
       provider: 'kakao',
       options: {
-        redirectTo: `${location.origin}/auth/callback`,
-        queryParams: { scope: 'account_email' },
+        redirectTo: 'https://your-project.vercel.app/auth/callback',
       },
     })
   }

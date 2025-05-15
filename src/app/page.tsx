@@ -1,16 +1,23 @@
-import SessionProvider from '@/components/sessionProvider'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { cookies, headers } from 'next/headers'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import SessionProvider from '@/components/SessionProvider'
+import HomeContent from './home-content'
 
-export default async function Home() {
-  const supabase = createServerSupabaseClient()
-  const { data: { session } } = await supabase.auth.getSession()
+export const dynamic = 'force-dynamic'
+
+export default async function Page() {
+  const supabase = createServerComponentClient<undefined>({
+    cookies: () => cookies(),
+    headers: () => headers(),
+  } as unknown as Parameters<typeof createServerComponentClient>[0])
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
   return (
-    <main>
-      <SessionProvider>
-        <h1>홈 페이지</h1>
-        {session ? <p>로그인됨: {session.user.email}</p> : <p>로그인 안됨</p>}
-      </SessionProvider>
-    </main>
+    <SessionProvider initialSession={session}>
+      <HomeContent />
+    </SessionProvider>
   )
 }
