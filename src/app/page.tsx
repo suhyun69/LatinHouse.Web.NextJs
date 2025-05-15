@@ -1,7 +1,7 @@
 import { cookies, headers } from 'next/headers'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import SessionProvider from '@/components/SessionProvider'
 import HomeContent from './home-content'
+import SessionProvider from '@/components/SessionProvider'
 
 export const dynamic = 'force-dynamic'
 
