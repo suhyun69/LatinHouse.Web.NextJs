@@ -27,8 +27,7 @@ export default function CreateProfile() {
     if (!response.ok) toast.error('프로필 생성에 실패했습니다.')
     else {
       toast.success('프로필을 생성했습니다.')
-      // router.push(`/profile/${result.profile_id}`)
-      router.push(`/`)
+      router.push(`/profile/${result.data.id}`)
     }
   }
 

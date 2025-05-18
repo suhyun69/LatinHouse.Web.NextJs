@@ -5,10 +5,11 @@ export type ProfileRequest = {
   gender: string
 }
 
-export type Profile = {
+export type ProfileView = {
   id: string
   nickname: string
   gender: string
+  avatar_url: string
   is_instructor: boolean
   is_admin: boolean
 }
