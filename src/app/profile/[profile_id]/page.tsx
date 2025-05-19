@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, use } from "react"
-import { Header } from "@/components/header"
+import { Header } from "@/components/Header"
 import { toast } from "sonner"
 import { ProfileDetail } from "@/components/ProfileDetail"
 import { RenderMessage } from "@/components/RenderMessage"
