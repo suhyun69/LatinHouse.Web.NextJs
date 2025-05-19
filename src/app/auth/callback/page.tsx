@@ -27,15 +27,27 @@ export default function AuthCallback() {
           throw error
         }
 
+        if (!session?.user.email) {
+          console.log('세션이 없거나 이메일이 없습니다.')
+          return router.replace('/')
+        }
+
         if (session) {
           await supabaseClient.auth.setSession(session)
           // console.log('세션 설정 완료:', session.user.email)
         }
+        const email = encodeURIComponent(session?.user.email || '')
 
-        // 2) URL에서 profileData 파싱 (세션의 이메일이 보장된 후)
+        // ─── 2) 프로필 조회 ───────────────────────────
+        const res = await fetch(`/api/profiles/email/${email}`)
+        if (res.ok) {
+          // 이미 프로필이 있으면 바로 홈으로
+          return router.replace('/')
+        }
+
+        // 3) URL에서 profileData 파싱 (세션의 이메일이 보장된 후)
         const raw = params.get('profileData')
         if (raw) {
-          // 회원가입
           try {
             const profileRequest = JSON.parse(raw)
             await fetch('/api/profiles', {
@@ -49,7 +61,7 @@ export default function AuthCallback() {
         }
         else {
           // 로그인
-          fetch(`/api/profiles/email/${encodeURIComponent(session?.user.email || '')}`)
+          fetch(`/api/profiles/email/${email}`)
             .then(res => {
               if (res.status === 404) {
                 // 프로필이 없으면 회원가입 페이지로
@@ -60,7 +72,8 @@ export default function AuthCallback() {
       } catch (err) {
         console.error('인증 처리 중 오류 발생:', err)
       } finally {
-        // 3) 항상 홈으로 리다이렉트
+        // 4) 항상 홈으로 리다이렉트
+        console.log('인증 처리 완료')
         router.replace('/')
       }
     }
