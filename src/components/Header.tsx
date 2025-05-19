@@ -21,7 +21,7 @@ export function Header() {
 
   const router = useRouter()
   
-  const { session, profile } = useSession()
+  const { session, loginProfile } = useSession()
   const [loading, setLoading] = useState(false)
 
   const handleKakaoLogin = async () => {
@@ -45,9 +45,9 @@ export function Header() {
   return (
     <header>
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {session && profile ? (
+        {session && loginProfile ? (
           <div className="flex flex-col cursor-pointer" onClick={() => router.push('/')}>
-            <span>Hello, {profile.nickname}</span>
+            <span>Hello, {loginProfile.nickname}</span>
             <span>Welcome to LatinHouse</span>
           </div>
         ) : (
@@ -56,13 +56,13 @@ export function Header() {
             <span>Welcome to LatinHouse</span>
           </div>
         )}
-        {session && profile ? (
+        {session && loginProfile ? (
           <div className="flex items-center gap-3">
             <Bell className="h-5 w-5" onClick={() => router.push('/notice')} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src={profile?.avatar_url || ""} alt={profile?.nickname} />
+                  <AvatarImage src={loginProfile?.avatar_url || ""} alt={loginProfile?.nickname} />
                   <AvatarFallback>
                     <User className="h-5 w-5" />
                   </AvatarFallback>
@@ -71,7 +71,7 @@ export function Header() {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push(`/profile/${profile?.id}`)}>
+                <DropdownMenuItem onClick={() => router.push(`/profile/${loginProfile?.id}`)}>
                   <User className="mr-2 h-4 w-4" />
                   <span>프로필</span>
                 </DropdownMenuItem>
@@ -87,7 +87,7 @@ export function Header() {
                   <UserCog className="mr-2 h-4 w-4" />
                   <span>친구 관리</span>
                 </DropdownMenuItem>
-                {profile.is_admin && (
+                {loginProfile.is_admin && (
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => router.push('/admin/create-profile')}>

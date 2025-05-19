@@ -6,15 +6,15 @@ import { toast } from "sonner"
 import { ProfileDetail } from "@/components/ProfileDetail"
 import { RenderMessage } from "@/components/RenderMessage"
 import { ProfileView } from "@/app/types/profiles"
+import { useSession } from "@/components/SessionProvider"
 
 export default function ProfilePage({ params }: { params: Promise<{ profile_id: string }> }) {
   
   const { profile_id } = use(params)
+  const { loginProfile } = useSession()
 
   const [profile, setProfile] = useState<ProfileView | null>(null)
   const [error, setError] = useState<string | null>(null)
-
-  // const { loginProfile } = useLoginProfile()
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -45,10 +45,10 @@ export default function ProfilePage({ params }: { params: Promise<{ profile_id: 
 
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       <div className="container mx-auto px-4 py-8 flex justify-center">
         <div className="max-w-sm w-full">
-          <ProfileDetail profile={profile} showEditLink={false}/>
+          <ProfileDetail profile={profile} showEditLink={loginProfile?.id === profile.id}/>
         </div>
       </div>
     </>

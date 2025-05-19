@@ -22,13 +22,13 @@ type Profile = {
 
 type ContextType = {
   session: Session | null
-  profile: Profile | null
+  loginProfile: Profile | null
   error: string | null
 }
 
 const SessionContext = createContext<ContextType>({
   session: null,
-  profile: null,
+  loginProfile: null,
   error: null,
 })
 
@@ -43,7 +43,7 @@ export default function SessionProvider({
 }) {
   const router = useRouter()
   const [session, setSession] = useState<Session | null>(null)
-  const [profile, setProfile] = useState<Profile | null>(null)
+  const [loginProfile, setLoginProfile] = useState<Profile | null>(null)
   const [error] = useState<string | null>(null)
 
   // 1) auth 세션 복원 & 변경 구독
@@ -64,16 +64,16 @@ export default function SessionProvider({
     if (session?.user.id) {
       fetch(`/api/profiles/email/${encodeURIComponent(session.user.email || '')}`)
         .then(res => (res.ok ? res.json() : Promise.reject(res.statusText)))
-        .then(({ data }) => setProfile(data))
-        .catch(() => setProfile(null))
+        .then(({ data }) => setLoginProfile(data))
+        .catch(() => setLoginProfile(null))
     } else {
-      setProfile(null)
+      setLoginProfile(null)
     }
   }, [session])
 
   // 3) Context에 세션, 프로필, 에러 제공
   return (
-    <SessionContext.Provider value={{ session, profile, error }}>
+    <SessionContext.Provider value={{ session, loginProfile, error }}>
       {children}
     </SessionContext.Provider>
   )

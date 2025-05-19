@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabaseJs } from '@/lib/supabase-js-client'
 import { supabaseClient } from '@/lib/supabase-client'
+import { RenderMessage } from '@/components/RenderMessage'
 
 export default function AuthCallback() {
 
@@ -67,5 +68,5 @@ export default function AuthCallback() {
     handleAuthCallback()
   }, [params, router])
 
-  return <div>로그인 처리 중…</div>
+  return <RenderMessage message="로그인 처리 중..." />
 }

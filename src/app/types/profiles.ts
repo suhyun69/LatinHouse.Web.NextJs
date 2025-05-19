@@ -13,3 +13,7 @@ export type ProfileView = {
   is_instructor: boolean
   is_admin: boolean
 }
+
+export type ProfileEditRequest = {
+  avatar_url: string
+}
