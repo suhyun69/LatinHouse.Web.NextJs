@@ -12,9 +12,10 @@ export async function GET(
     .from('profiles')
     .select('id, nickname, gender, avatar_url, is_instructor, is_admin')
     .eq('email', email)
-    .single()
+    .maybeSingle()
 
   if (error) {
+    console.error(error)
     return NextResponse.json(
       { error: { message: error.message, code: error.code ?? 'db_error' } },
       { status: 500 }

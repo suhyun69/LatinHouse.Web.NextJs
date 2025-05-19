@@ -25,14 +25,14 @@ export function Header() {
   const [loading, setLoading] = useState(false)
 
   const handleKakaoLogin = async () => {
-    // setLoading(true)
-    // await supabase.auth.signInWithOAuth({
-    //   provider: 'kakao',
-    //   options: {
-    //     redirectTo: `${location.origin}/auth/callback`,
-    //   },
-    // })
-    // setLoading(false)
+    setLoading(true)
+    await supabaseClient.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    })
+    setLoading(false)
   }
 
   const handleLogout = async () => {

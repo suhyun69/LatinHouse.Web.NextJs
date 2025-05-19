@@ -14,7 +14,7 @@ export default function AuthCallback() {
     const handleAuthCallback = async () => {
       try {
         // 세션 체크 전에 약간의 지연 추가
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         // 1) Supabase 세션 복원
         const {
@@ -28,16 +28,13 @@ export default function AuthCallback() {
 
         if (session) {
           await supabaseClient.auth.setSession(session)
-          console.log('세션 설정 완료:', session.user.email)
-        }
-        else {
-          console.log('세션이 없습니다. OAuth 콜백이 아직 완료되지 않았을 수 있습니다.')
+          // console.log('세션 설정 완료:', session.user.email)
         }
 
         // 2) URL에서 profileData 파싱 (세션의 이메일이 보장된 후)
         const raw = params.get('profileData')
         if (raw) {
-          console.log('profileData 파싱 시작')
+          // 회원가입
           try {
             const profileRequest = JSON.parse(raw)
             await fetch('/api/profiles', {
@@ -49,6 +46,16 @@ export default function AuthCallback() {
             console.error('프로필 파싱 실패:', e)
           }
         }
+        else {
+          // 로그인
+          fetch(`/api/profiles/email/${encodeURIComponent(session?.user.email || '')}`)
+            .then(res => {
+              if (res.status === 404) {
+                // 프로필이 없으면 회원가입 페이지로
+                router.replace('/signup')
+              }
+            })
+        }
       } catch (err) {
         console.error('인증 처리 중 오류 발생:', err)
       } finally {
@@ -56,20 +63,6 @@ export default function AuthCallback() {
         router.replace('/')
       }
     }
-
-    // const handleAuthCallback = async () => {
-    //   try {
-    //     const { data: { session }, error } = await supabaseJs.auth.getSession()
-    //     if (error) throw error
-    //     if (session) {
-    //       await supabaseJs.auth.setSession(session)
-    //     }
-    //   } catch (error) {
-    //     console.error('인증 처리 중 오류 발생:', error)
-    //   } finally {
-    //     router.replace('/')
-    //   }
-    // }
 
     handleAuthCallback()
   }, [params, router])
