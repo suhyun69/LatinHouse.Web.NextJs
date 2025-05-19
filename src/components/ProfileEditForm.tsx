@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 import { useRef, useState } from "react"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
-import { Loader2, User } from "lucide-react"
+import { Loader2, User, Check } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import { ProfileEditRequest, ProfileView } from "@/app/types/profiles"
 
@@ -22,9 +22,10 @@ interface ProfileFormProps {
   profile: ProfileView
   onSubmit: (data: ProfileEditRequest) => Promise<void>
   onUploadImage: (file: File, fileName: string) => Promise<string>
+  onInstructor: () => Promise<boolean>
 }
 
-export function ProfileEditForm({ profile, onSubmit, onUploadImage }: ProfileFormProps) {
+export function ProfileEditForm({ profile, onSubmit, onUploadImage, onInstructor }: ProfileFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || "")
@@ -69,6 +70,13 @@ export function ProfileEditForm({ profile, onSubmit, onUploadImage }: ProfileFor
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click() // ✅ Avatar 클릭 시 input 클릭 트리거
+  }
+  
+  const handleInstructor = async () => {
+    const confirmText = '강사로 등록하시겠습니까?'
+    if (confirm(confirmText)) {
+      await onInstructor();
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -181,18 +189,29 @@ export function ProfileEditForm({ profile, onSubmit, onUploadImage }: ProfileFor
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-2">
-            <Label htmlFor="is-instructor">Is Instructor?</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="is-instructor">
+              Instructor
+              {isInstructor && (
+                <Check className="inline-block h-4 w-4 text-green-500" />
+              )}
+            </Label>
             <div className="flex items-center gap-2">
-              <Switch
+              {/* <Switch
                 id="is-instructor"
                 checked={isInstructor}
                 onCheckedChange={setIsInstructor}
                 // disabled={profile.is_instructor}
-              />
-              <span className="text-sm text-muted-foreground">
+              /> */}
+              {!isInstructor && (
+                <Button type="button" id="is-instructor" onClick={handleInstructor}>
+                  등록
+                </Button>
+              )}
+              
+              {/* <span className="text-sm text-muted-foreground">
                 {isInstructor ? 'Yes' : 'No'}
-              </span>
+              </span> */}
             </div>
           </div>
         </CardContent>

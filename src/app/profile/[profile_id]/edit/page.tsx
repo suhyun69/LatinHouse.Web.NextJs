@@ -87,7 +87,28 @@ export default function ProfileEditPage({ params }: { params: Promise<{ profile_
       return ""
     }
   }  
-  
+
+  const handleInstructor = async () => {
+    const response = await fetch(`/api/profiles/${profile_id}/instructor`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        updated_by: loginProfile?.id || ""
+      }),
+    })
+
+    if (!response.ok) toast.error('강사 등록에 실패했습니다.')
+    else {
+      toast.success('강사 등록에 성공했습니다.')
+      router.replace(`/profile/${profile_id}`)
+      router.refresh()
+    }
+
+    return response.ok;
+  }
+
   const handleSubmit = async (data: ProfileEditRequest) => {
 
     const response = await fetch(`/api/profiles/${profile_id}`, {
@@ -116,7 +137,7 @@ export default function ProfileEditPage({ params }: { params: Promise<{ profile_
       <HeaderTitle title="Edit Profile" />
       <div className="container mx-auto px-4 py-8 flex justify-center">
         <div className="max-w-sm w-full">
-          <ProfileEditForm profile={profile} onSubmit={handleSubmit} onUploadImage={handleUploadImage} />
+          <ProfileEditForm profile={profile} onSubmit={handleSubmit} onUploadImage={handleUploadImage} onInstructor={handleInstructor}/>
         </div>
       </div>
     </>
