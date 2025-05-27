@@ -42,7 +42,7 @@ export default function SessionProvider({
   children: ReactNode
 }) {
   const [session, setSession] = useState<Session | null>(null)
-  const [loginProfile, setLoginProfile] = useState<LoginProfile | null>(null)
+  const [loginProfile, setLoginProfile] = useState<LoginProfile | null | undefined>(undefined)
   const [error] = useState<string | null>(null)
 
   // 1) auth 세션 복원 & 변경 구독

@@ -18,7 +18,7 @@ export default function LessonCreatePage() {
   useEffect(() => {
     if (loginProfile === undefined) return // 아직 로딩 중
 
-    if (!loginProfile) {
+    if (loginProfile === null) {
       setTimeout(() => {
         toast.success("로그인이 필요합니다.")
         router.replace("/") // replace() 사용 권장
