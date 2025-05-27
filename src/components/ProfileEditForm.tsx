@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRef, useState } from "react"
-import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import { Loader2, User, Check } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
@@ -34,7 +33,7 @@ export function ProfileEditForm({ profile, onSubmit, onUploadImage, onInstructor
   const [profileId] = React.useState(profile.id)
   const [nickname] = React.useState(profile.nickname)
   const [sex] = React.useState(profile.gender)
-  const [isInstructor, setIsInstructor] = React.useState(profile.is_instructor)
+  const [isInstructor] = React.useState(profile.is_instructor)
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {

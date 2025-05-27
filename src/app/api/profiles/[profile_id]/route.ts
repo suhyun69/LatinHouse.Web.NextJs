@@ -43,7 +43,7 @@ export async function PATCH(
 ) {
   const { profile_id } = await context.params
   const body = await request.json()
-  const { is_instructor, avatar_url, updated_by } = body
+  const { avatar_url, updated_by } = body
 
   // Supabase에 프로필 수정
   const { data, error } = await supabaseJs

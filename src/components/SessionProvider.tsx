@@ -9,7 +9,6 @@ import {
 } from 'react'
 import { supabaseClient } from '@/lib/supabase-client'
 import type { Session } from '@supabase/supabase-js'
-import { useRouter } from 'next/navigation'
 
 type Profile = {
   id: string
@@ -41,7 +40,6 @@ export default function SessionProvider({
 }: {
   children: ReactNode
 }) {
-  const router = useRouter()
   const [session, setSession] = useState<Session | null>(null)
   const [loginProfile, setLoginProfile] = useState<Profile | null>(null)
   const [error] = useState<string | null>(null)

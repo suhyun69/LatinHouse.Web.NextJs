@@ -11,9 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
-import { toast } from "sonner"
-import { useEffect, useState } from 'react'
+// import { useState } from 'react'
 import { useSession } from "./SessionProvider"
 import { supabaseClient } from "@/lib/supabase-client"
 
@@ -22,24 +20,24 @@ export function Header() {
   const router = useRouter()
   
   const { session, loginProfile } = useSession()
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
 
   const handleKakaoLogin = async () => {
-    setLoading(true)
+    // setLoading(true)
     await supabaseClient.auth.signInWithOAuth({
       provider: 'kakao',
       options: {
         redirectTo: `${location.origin}/auth/callback`,
       },
     })
-    setLoading(false)
+    // setLoading(false)
   }
 
   const handleLogout = async () => {
-    setLoading(true)
+    // setLoading(true)
     await supabaseClient.auth.signOut()
     // 로그아웃 후 세션이 삭제되면 onAuthStateChange 로 UI가 자동 갱신됩니다.
-    setLoading(false)
+    // setLoading(false)
   }
 
   return (
