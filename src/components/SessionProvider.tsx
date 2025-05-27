@@ -10,10 +10,11 @@ import {
 import { supabaseClient } from '@/lib/supabase-client'
 import type { Session } from '@supabase/supabase-js'
 
-type Profile = {
+type LoginProfile = {
   id: string
   user_id: string
   nickname: string
+  gender: string
   avatar_url?: string
   is_instructor: boolean
   is_admin: boolean
@@ -21,7 +22,7 @@ type Profile = {
 
 type ContextType = {
   session: Session | null
-  loginProfile: Profile | null
+  loginProfile: LoginProfile | null
   error: string | null
 }
 
@@ -41,7 +42,7 @@ export default function SessionProvider({
   children: ReactNode
 }) {
   const [session, setSession] = useState<Session | null>(null)
-  const [loginProfile, setLoginProfile] = useState<Profile | null>(null)
+  const [loginProfile, setLoginProfile] = useState<LoginProfile | null>(null)
   const [error] = useState<string | null>(null)
 
   // 1) auth 세션 복원 & 변경 구독
