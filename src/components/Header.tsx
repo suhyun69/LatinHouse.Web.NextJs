@@ -77,6 +77,10 @@ export function Header() {
                   <Footprints className="mr-2 h-4 w-4" />
                   <span>수업 관리</span>
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/lessonMng/create')}>
+                  <Footprints className="mr-2 h-4 w-4" />
+                  <span>수업 생성</span>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push('/couponMng')}>
                   <Ticket className="mr-2 h-4 w-4" />
                   <span>쿠폰 관리</span>
