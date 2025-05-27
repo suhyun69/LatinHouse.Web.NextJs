@@ -11,7 +11,7 @@ import { LessonForm } from "@/components/LessonForm"
 
 export default function LessonCreatePage() {
   const router = useRouter()
-  const { loginProfile } = useSession()
+  const { session, loginProfile } = useSession()
 
   const [friends, setFriends] = useState<ProfileView[]>([])
 
@@ -46,7 +46,7 @@ export default function LessonCreatePage() {
       setFriends(result.data)
     }
     fetchFriends()
-  }, [loginProfile])
+  }, [session, loginProfile])
 
   const handleSubmit = async (data: LessonRequest) => {
 
