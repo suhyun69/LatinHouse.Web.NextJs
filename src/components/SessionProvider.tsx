@@ -22,7 +22,7 @@ type LoginProfile = {
 
 type ContextType = {
   session: Session | null
-  loginProfile: LoginProfile | null
+  loginProfile: LoginProfile | undefined | null
   error: string | null
 }
 
