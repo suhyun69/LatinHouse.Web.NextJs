@@ -19,6 +19,7 @@ export default function LessonCreatePage() {
     if (loginProfile === undefined) return // 아직 로딩 중
 
     if (loginProfile === null) {
+      console.log("loginProfile is null")
       setTimeout(() => {
         toast.success("로그인이 필요합니다.")
         router.replace("/") // replace() 사용 권장
